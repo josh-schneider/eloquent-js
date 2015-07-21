@@ -297,7 +297,7 @@ function SmartPlantEater() {
 
 SmartPlantEater.prototype.act = function(context) {
     var space = context.find(" ");
-    if (this.energy > 80 && space)
+    if (this.energy > 60 && space)
         return {type: "reproduce", direction: space};
     var plant = context.find("*");
     var numPlants = context.findCount("*");
@@ -338,8 +338,6 @@ Human.prototype.act = function(context) {
     var tiger = context.find("@");
     var critter = context.find("O");
     var plant = context.find("*");
-    if (tiger)
-        return {type:"eat", direction: tiger};
     if (critter && plant)
         return {type: "eat", direction: (Math.random >= .5) ? plant : critter};
     if (plant)
