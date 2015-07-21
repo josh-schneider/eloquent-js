@@ -179,6 +179,10 @@ View.prototype.find = function(ch) {
     if (found.length == 0) return null;
     return randomElement(found);
 };
+View.prototype.findCount = function(ch) {
+    var found = this.findAll(ch);
+    return (found.length > 0) ? found.length : null;
+}
 
 function dirPlus(dir, n) {
     var index = directionNames.indexOf(dir);
@@ -287,6 +291,24 @@ PlantEater.prototype.act = function(context) {
         return {type: "move", direction: space};
 };
 
+function SmartPlantEater() {
+    this.energy = 20;
+}
+
+SmartPlantEater.prototype.act = function(context) {
+    var space = context.find(" ");
+    if (this.energy > 80 && space)
+        return {type: "reproduce", direction: space};
+    var plant = context.find("*");
+    var numPlants = context.findCount("*");
+    if (plant && numPlants>1)
+        return {type: "eat", direction: plant};
+    if (space)
+        return {type: "move", direction: space};
+};
+
+
+
 var valley = new LifelikeWorld(
     ["############################",
         "#####                 ######",
@@ -302,5 +324,23 @@ var valley = new LifelikeWorld(
         "############################"],
     {"#": Wall,
         "O": PlantEater,
+        "*": Plant}
+);
+
+smartValley = new LifelikeWorld(
+    ["############################",
+        "#####                 ######",
+        "##   ***                **##",
+        "#   *##**         **  O  *##",
+        "#    ***     O    ##**    *#",
+        "#       O         ##***    #",
+        "#                 ##**     #",
+        "#   O       #*             #",
+        "#*          #**       O    #",
+        "#***        ##**    O    **#",
+        "##****     ###***       *###",
+        "############################"],
+    {"#": Wall,
+        "O": SmartPlantEater,
         "*": Plant}
 );
